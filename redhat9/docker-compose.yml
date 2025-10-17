@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  redhat:
+    image: redhat/ubi9:latest
+    container_name: redhat-linux
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./data:/data  # 볼륨 마운트
+    ports:
+      - "9200:9200"
+      - "9201:9201"
+      - "5601:5601"
+    restart: unless-stopped
+    command: /bin/bash
+
+volumes:
+  redhat_data:
+    driver: local
