@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  gcloud:
+    image: google/cloud-sdk:slim
+    platform: linux/amd64
+    container_name: gcloud-sdk
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./gcp-key.json:/root/gcp-key.json:ro        # GCP 서비스 계정 키 마운트 (읽기 전용)
+      - ./attachment:/data/attachment               # attachment 디렉터리 마운트
+    working_dir: /workspace
+    entrypoint: /bin/bash
+    tty: true
