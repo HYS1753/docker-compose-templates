@@ -1,0 +1,41 @@
+version: "3.8"
+services:
+    mongodb:
+        image: mongo
+        container_name: mongodb
+        ports:
+            - 27017:27017
+        volumes:
+            - ./data:/data/db
+            - ./keyfile/mongodb.key:/etc/mongo/mongodb.key:ro
+        environment:
+            - MONGO_INITDB_ROOT_USERNAME=root
+            - MONGO_INITDB_ROOT_PASSWORD=root
+        command:  >
+            mongod --replSet rs0
+                   --auth
+                   --keyFile /etc/mongo/mongodb.key
+                   --bind_ip_all
+        networks:
+            - mongodb_network
+volumes:
+    data: {}        
+
+networks:
+    mongodb_network: 
+        name: mongodb_network
+
+# 아래 명령어로 keyfile 적용 필요
+# mkdir -p keyfile
+# openssl rand -base64 756 > keyfile/mongodb.key
+# chmod 400 keyfile/mongodb.key
+
+# docker 띄운 후 추가 작업 필요( replica 설정 )
+# mongosh -u root -p root
+#
+# rs.initiate({
+#  _id: "rs0",
+#  members: [{ _id: 0, host: "localhost:27017" }]
+# })
+#
+# rs.status()
