@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   es01:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.0
     container_name: es01
     environment:
       - node.name=es01
@@ -17,6 +17,8 @@ services:
       - xpack.security.enrollment.enabled=false
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - "ES_JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+      - "ES_JAVA_OPTS=-XX:UseSVE=0"
+      - "CLI_JAVA_OPTS=-XX:UseSVE=0"
     ulimits:
       memlock:
         soft: -1
@@ -43,7 +45,7 @@ services:
       "
 
   kib01:
-    image: docker.elastic.co/kibana/kibana:8.12.2
+    image: docker.elastic.co/kibana/kibana:8.17.0
     container_name: kib01
     ports:
       - 5601:5601
