@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  controller:
+    image: ngrinder/controller:latest
+    platform: linux/amd64
+    container_name: controller
+    ports:
+      - "80:80"           # Web UI
+      - "16001:16001"     # Agent-Controller 통신
+      - "12000-12009:12000-12009"  # 테스트 실행 포트
+    volumes:
+      - ./ngrinder-controller:/opt/ngrinder-controller   # 설정·로그 보존
+    restart: unless-stopped     # 재시작 정책(옵션)
+
+  agent:
+    image: ngrinder/agent:latest
+    platform: linux/amd64
+    # container_name: agent  # Scale 주기 위해 명은 제거
+    environment:
+      # controller 서비스명을 그대로 사용하면 Compose가 자동으로 DNS를 구성해 줍니다
+      - CONTROLLER_IP=controller
+      - JAVA_OPTS=-Xms4g -Xmx4g -XX:+UseG1GC
+    depends_on:
+      - controller
+    restart: unless-stopped
