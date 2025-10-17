@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  cerebro:
+    image: lmenezes/cerebro
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./conf/application.conf:/opt/cerebro/conf/application.conf
+    networks:
+      - cerebro_net
+
+volumes:
+  cerebro_data:
+    driver: local
+
+networks:
+  cerebro_net:
+    driver: bridge
+
